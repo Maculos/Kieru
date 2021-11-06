@@ -20,14 +20,6 @@ class Utils(Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
-	@commands.command(name="template", help="This is a command.")
-	async def template(self, ctx):
-		embed = Embed(title="This is a title.", description="This is a description.", color=Color.from_rgb(0, 0, 0))
-		embed.add_field(name="This is a field.", value="This is a value.")
-		embed.set_thumbnail(url=os.environ.get("BOT_ICON"))
-		
-		await ctx.send(embed=embed)
-
 	@commands.command(name='debug')
 	async def debug(self, ctx):
 		current_time=time.time()
@@ -41,11 +33,10 @@ class Utils(Cog):
 	@commands.command(name='invite')
 	async def invite(self, ctx):
 		embed = Embed(title=f"Invite {self.bot.user.name}", color=int(os.getenv('COLOR_DEFAULT'), 16), url=os.getenv('INVITE_URL'))
-		embed.set_thumbnail(url=os.getenv('BOT_ICON'))
 		await ctx.send(embed=embed)
 	#a great source of torment
 	@commands.command()
-	async def echo(ctx, msg):
+	async def echo(self, ctx, msg):
 		if ctx.message.author.id == 332287078832537601:
 			await ctx.send(msg)
 			await ctx.message.delete()
@@ -64,13 +55,16 @@ class Utils(Cog):
 		if guild.system_channel:
 			await guild.system_channel.send(f"Welcome {member.mention} to {guild.name}!")
 	@Cog.listener()
-	async def on_guild_join(guild):
+	async def on_guild_join(self, guild):
 		if guild.system_channel:
-			await guild.system_channel.send(f"Hiya! Thanks for adding me to {guild.name}! You can unlock a better join message by buying premium starting at $5.99 a month!")
-			"""
 			embed = Embed(title=f"Hiya! Thanks for adding me to {guild.name}!", color=int(os.getenv('COLOR_DEFAULT'), 16))
+			embed.add_field(name=f"Manage everything about {self.bot.user.name} from here", value="[Dashboard](https://timesoup.gg/dash)", inline=True)
+			embed.add_field(name="Commands", value="Use 'k!help' or view the full list [here](https://timesoup.gg/commands)", inline=True)
+			embed.add_field(name="d", value="3", inline=True)
+			embed.add_field(name="d", value="4", inline=True)
+			embed.add_field(name="d", value="5", inline=True)
+			#embed.add_field(name=f"Make {self.bot.user.name} even better with premium!", value="[Start a free trial](https://timesoup.gg/premium)", inline=True)
 			await guild.system_channel.send(embed=embed)
-			"""
 
 def setup(bot):
 	bot.add_cog(Utils(bot))
