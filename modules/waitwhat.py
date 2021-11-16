@@ -9,7 +9,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # Extra Imports
 from mcstatus import MinecraftServer
 
-class MineStatus(Cog):
+class waitwhat(Cog):
 	def __init__(self, bot):
 		self.server = MinecraftServer("waitwhat.maculos.dev", 25565)
 		self.bot = bot
@@ -43,13 +43,13 @@ class MineStatus(Cog):
 			if ctx.author.guild_permissions.administrator: 
 				if ctx.mentions:
 					if ctx.mentions[0].id == 332287078832537601:
-						await ctx.reply("They'll be notified, including via threats if needed.")
-					else:
-						return
+						if "fix" in ctx.content.lower():
+							await ctx.reply("They'll be notified, including via threats if needed.")
+						else:
+							return
 
 def setup(bot):
-	bot.add_cog(MineStatus(bot))
-
+	bot.add_cog(waitwhat(bot))
 if __name__ == "__main__":
 	# Running, running, running, running, oh no it broke!
 	import main

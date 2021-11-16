@@ -42,6 +42,13 @@ class Utils(Cog):
 			await ctx.message.delete()
 		else:
 			await ctx.send("No. nya~")
+	@commands.command()
+	async def customdm(self, ctx, member: discord.Member, msg):
+		if ctx.message.author.id == 332287078832537601:
+				embed = Embed(title=msg, color=int(os.getenv('COLOR_DEFAULT'), 16))
+				await member.send(embed=embed)
+		else:
+			await ctx.send("No. nya~")
 	#ya gotta greet them in the best way you know. y'a know? y'a know.
 	@Cog.listener()
 	async def on_member_join(member):

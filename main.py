@@ -5,18 +5,13 @@ import random
 from platform import python_version
 from discord import __version__ as discord_version
 import discord
-from discord import Embed, Activity, ActivityType, Guild
+from discord import Activity, ActivityType
 from discord.ext.commands import Bot
-from mcstatus import MinecraftServer
-from discord import Embed, Color
 
 #get dem secrets
 from dotenv import load_dotenv
 load_dotenv()
-
 bot = Bot(command_prefix=os.environ.get("BOT_PREFIX"), intents=discord.Intents.all())
-server = MinecraftServer("192.168.254.24", 25565)
-
 # Load cogs
 for cog in os.listdir("modules"):
 	if cog.endswith(".py") and not cog.startswith("__"):
@@ -32,8 +27,7 @@ async def on_ready():
 	current_activity = Activity(name=f"{len(bot.guilds)} server{'s' if len(bot.guilds) > 1 else ''}! | k!", type=ActivityType.watching)
 	await bot.change_presence(activity=current_activity, status=discord.Status.idle)
 	print("ITS ALIVEEEEEEEEEEEEEE!")
-	print("(hacker noises) I'm in. (connected as " + bot.user.name + ")")
-	print("")
+	print("(hacker noises) I'm in. (connected as " + bot.user.name + ") \n")
 bot.remove_command('help')
 #The classic "something went wrong and I *really* dont care to fix it" machine
 @bot.event
