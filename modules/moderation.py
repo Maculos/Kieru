@@ -6,7 +6,7 @@ from discord import Embed, Color
 # Set the path to the root of the project
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-class moderation(commands.Cog):
+class Moderation(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
@@ -25,7 +25,7 @@ class moderation(commands.Cog):
 		await ctx.send(embed=embed)
 
 def setup(bot):
-	bot.add_cog(moderation(bot))
+	bot.add_cog(Moderation(bot))
 if __name__ == "__main__":
 	# Run the bot
 	import main

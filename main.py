@@ -17,10 +17,11 @@ for cog in os.listdir("modules"):
 	if cog.endswith(".py") and not cog.startswith("__"):
 		try:
 			bot.load_extension(f"modules.{cog[:-3]}")
-			print(f"Loaded {cog}")
+			print(f"Loaded {cog[0:-3]}")
 		except Exception as exception:
-			print(f"Failed to load {cog}")
+			print(f"Failed to load {cog[0:-3]}")
 			print(exception)
+bot.remove_command("help")
 #------------------The Anti-Headache Machine------------------#
 @bot.event
 async def on_ready():
@@ -28,7 +29,7 @@ async def on_ready():
 	await bot.change_presence(activity=current_activity, status=discord.Status.idle)
 	print("ITS ALIVEEEEEEEEEEEEEE!")
 	print("(hacker noises) I'm in. (connected as " + bot.user.name + ") \n")
-bot.remove_command('help')
+
 #The classic "something went wrong and I *really* dont care to fix it" machine
 @bot.event
 async def on_command_error(ctx, error):
