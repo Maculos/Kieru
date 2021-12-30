@@ -12,31 +12,31 @@ from mcstatus import MinecraftServer
 
 class Waitwhat(Cog):
 	def __init__(self, bot):
-		self.server = MinecraftServer("waitwhat.maculos.dev", 25566)
+		self.server = MinecraftServer("waitwhat.maculos.dev", 25565)
 		self.bot = bot
 	
 	@commands.command(name='ms', aliases=['minestatus'], help="Gets the server's status")
 	async def ms(self, ctx):
-		try:
-			status = self.server.status()
-			embed=Embed(title="Online", url="", description="{0} players online with a ping of {1} ms".format(status.players.online, status.latency), color=int(os.getenv('COLOR_SUCCESS'), 16))
-			await ctx.reply(embed=embed)
-		except:
-			embed=Embed(title="Offline", url="", description="", color=int(os.getenv('COLOR_ERROR'), 16))
-			await ctx.reply(embed=embed)
+		if ctx.guild.id == 801180663122100234:
+			try:
+				status = self.server.status()
+				embed=Embed(title="Online", url="", description="{0} players online with a ping of {1} ms".format(status.players.online, status.latency), color=int(os.getenv('COLOR_SUCCESS'), 16))
+				await ctx.reply(embed=embed)
+			except:
+				embed=Embed(title="Offline", url="", description="", color=int(os.getenv('COLOR_FAIL'), 16))
+				await ctx.reply(embed=embed)
 	
 	@commands.command(name="ms.players", help="Lists online players", aliases=["msp"])
 	async def players(self, ctx):
 		if ctx.guild.id == 801180663122100234:
 			try:
+				status = self.server.status()
 				query = self.server.query()
-				embed = Embed(title="Online Players", description=f"{', '.join(query.players.names)}", color=int(os.getenv('COLOR_SUCCESS'), 16))
+				embed = Embed(title=f"{status.players.online} Online Players", description=f"{query.players.names}", color=int(os.getenv('COLOR_SUCCESS'), 16))
 				await ctx.send(embed=embed)
 			except:
-				embed=Embed(title="Offline", url="", description="", color=int(os.getenv('COLOR_ERROR'), 16))
+				embed=Embed(title="Offline", url="", description="", color=int(os.getenv('COLOR_FAIL'), 16))
 				await ctx.reply(embed=embed)
-		else:
-			await ctx.reply("This command is only available in the WaitWhat server.")
 	@commands.command(name="suggest", aliases=["s"], help="Creates a suggestion.")
 	async def suggest(self, ctx, *args):
 		if ctx.guild.id == 801180663122100234:
@@ -49,8 +49,6 @@ class Waitwhat(Cog):
 				await msg.add_reaction("❌")
 			else:
 				await ctx.reply("You need to provide a suggestion.")
-		else:
-			await ctx.reply("This command is only available in the WaitWhat server.")
 	@Cog.listener()
 	async def on_message(self,ctx):
 		if ctx.author.bot:

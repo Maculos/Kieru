@@ -9,6 +9,8 @@ import datetime
 from datetime import timezone
 import time
 from discord.ext.commands.cog import Cog
+from mcstatus import MinecraftServer
+import requests
 
 # Path corrector, very magical isn't it?
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -20,8 +22,9 @@ utc=datetime.datetime.now()
 class Utils(Cog):
 	def __init__(self, bot):
 		self.bot = bot
+		bot.remove_command("help")
 
-	@commands.command(name='commands', aliases=['cmds', 'cmd'], help="Shows all commands.")
+	@commands.command(name='help', aliases=['cmds', 'cmd'], help="Shows all commands.")
 	async def cmds(self, ctx, index : int = 1):
 		embed = Embed(title="Help", colour=Color.from_rgb(0, 200, 0))
 		pages = []
@@ -34,7 +37,7 @@ class Utils(Cog):
 					pages.append([command])
 		if index <= len(pages) and index > 0:
 			for command in pages[index-1]:
-				embed.add_field(name=command.name, value=f"{command.help} - From {command.cog_name}", inline=False)
+				embed.add_field(name=command.name, value=f"{command.help} -{command.cog_name}", inline=False)
 			embed.add_field(name=f"Displaying page {index} out of {len(pages)} pages", value=f"Type {f'{ctx.prefix}`' if ctx.prefix.count('<@!') > 0 else f'`{ctx.prefix}'}cmds <page>` to display a different page.", inline=False)
 			embed.set_thumbnail(url=os.environ.get("BOT_ICON"))
 			await ctx.send(embed=embed)
@@ -63,7 +66,19 @@ class Utils(Cog):
 		#if full failure:
 		#	embed=discord.Embed(title="Service Disruption", color=int(os.getenv('COLOR_FAIL'), 16))
 		embed=discord.Embed(title="Status", color=int(os.getenv('COLOR_SUCCESS'), 16))
-		embed.add_field(name="Service 1", value="✅ Operational", inline=False)
+		if ctx.guild.id == 801180663122100234:
+			try:
+				server = MinecraftServer("waitwhat.maculos.dev", 25565)
+				status = server.status()
+				embed.add_field(name="Minecraft", value=f"✅ Operational ({status.latency} ms)", inline=False)
+			except:
+				embed.add_field(name="Minecraft", value="❌ Service Disruption", inline=False)
+		r = requests.get("https://maculos.dev")
+		if str(r) == '<Response [200]>':
+			embed.add_field(name="Maculos.dev", value="✅ Operational", inline=False)
+		else:
+			embed.add_field(name="Maculos.dev", value=f"❌ Service Disruption ({r})", inline=False)
+			print(r)
 		embed.add_field(name="Service 2", value="🟧 Degraded Performance", inline=False)
 		embed.add_field(name="Service 3", value="❌ Service Disruption", inline=False)
 		await ctx.send(embed=embed)
@@ -86,27 +101,31 @@ class Utils(Cog):
 			await member.send("https://penelopescott.bandcamp.com/album/hazards")
 		except:
 			pass
-		await guild.system_channel.send(f"Welcome {member.mention} to {guild.name}!")
+		try:
+			sys_ch=self.bot.get_channel(guild.system_channel.id)
+			await sys_ch.send(f"Welcome {member.mention} to {guild.name}!")
+		except:
+			pass
 	@Cog.listener()
 	async def on_guild_join(self, guild):
+		embed = Embed(title=f"Hiya! Thanks for adding me to {guild.name}!", color=int(os.getenv('COLOR_DEFAULT'), 16))
+		embed.add_field(name=f"Manage everything about {self.bot.user.name} from here", value="[Dashboard](https://timesoup.gg/dash)", inline=True)
+		embed.add_field(name="Commands", value="Use 'k!help' or view the full list [here](https://timesoup.gg/commands)", inline=True)
+		embed.add_field(name="d", value="3", inline=True)
+		embed.add_field(name="d", value="4", inline=True)
+		embed.add_field(name="d", value="5", inline=True)
+		#embed.add_field(name=f"Make {self.bot.user.name} even better with premium!", value="[Start a free trial](https://timesoup.gg/premium)", inline=True)
 		if guild.system_channel:
-			embed = Embed(title=f"Hiya! Thanks for adding me to {guild.name}!", color=int(os.getenv('COLOR_DEFAULT'), 16))
-			embed.add_field(name=f"Manage everything about {self.bot.user.name} from here", value="[Dashboard](https://timesoup.gg/dash)", inline=True)
-			embed.add_field(name="Commands", value="Use 'k!help' or view the full list [here](https://timesoup.gg/commands)", inline=True)
-			embed.add_field(name="d", value="3", inline=True)
-			embed.add_field(name="d", value="4", inline=True)
-			embed.add_field(name="d", value="5", inline=True)
-			#embed.add_field(name=f"Make {self.bot.user.name} even better with premium!", value="[Start a free trial](https://timesoup.gg/premium)", inline=True)
-			await guild.system_channel.send(embed=embed)
-
+			sys_ch=self.bot.get_channel(guild.system_channel.id)
+			await sys_ch.send(embed=embed)
+		else:
+			pass 
 	#a great source of torment
 	@commands.command()
 	async def echo(self, ctx, *args):
 		if ctx.message.author.id == 332287078832537601:
 			await ctx.send(" ".join(args[0:len(args)]))
 			await ctx.message.delete()
-		else:
-			print("Unauthorized echo command use")
 	@commands.command()
 	async def customdm(self, ctx, member: discord.Member, *args):
 		if ctx.message.author.id == 332287078832537601 or ctx.message.author.id == 597205813055979522:

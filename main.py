@@ -21,13 +21,11 @@ for cog in os.listdir("modules"):
 		except Exception as exception:
 			print(f"Failed to load {cog[0:-3]}")
 			print(exception)
-bot.remove_command("help")
 #------------------The Anti-Headache Machine------------------#
 @bot.event
 async def on_ready():
 	current_activity = Activity(name=f"{len(bot.guilds)} server{'s' if len(bot.guilds) > 1 else ''}! | k!", type=ActivityType.watching)
 	await bot.change_presence(activity=current_activity, status=discord.Status.idle)
-	print("ITS ALIVEEEEEEEEEEEEEE!")
 	print("(hacker noises) I'm in. (connected as " + bot.user.name + ") \n")
 
 #The classic "something went wrong and I *really* dont care to fix it" machine

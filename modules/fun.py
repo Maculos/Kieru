@@ -1,9 +1,11 @@
 #barebones imports
 import os, sys
 import random
+import discord
 from typing import cast
 from discord.ext import commands
 from discord import Embed, Color
+from aiohttp import ClientSession
 
 # Set the path to the root of the project
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -23,6 +25,24 @@ class Fun(commands.Cog):
 	async def cat(self, ctx):
 		await ctx.reply(cats[random.randint(0, len(cats)-1)])
 
+	@commands.command(name='urban', aliases=['ud'])
+	async def urbandictionary(self, ctx, *args):
+		try:
+			term = " ".join(args[0:len(args)])
+			url = "https://mashape-community-urban-dictionary.p.rapidapi.com/define"
+			querystring = {"term":term}
+			headers = {
+			'x-rapidapi-host': "mashape-community-urban-dictionary.p.rapidapi.com",
+			'x-rapidapi-key': "14bce11f2dmshea8fd5c80ee0478p1dcfe6jsnc05340f0d59d"
+			}
+			async with ClientSession() as session:
+				async with session.get(url, headers=headers, params=querystring) as response:
+					r = await response.json()
+					embed = discord.Embed(title=f"Urban dictionary result for {term}", color=int(os.getenv('COLOR_SUCCESS'), 16), description= f"Definition: {r['list'][0]['definition']}")
+			await ctx.send(embed=embed)
+		except:
+			embed=Embed(title=f"Could not find results for {term}", url="", description="", color=int(os.getenv('COLOR_FAIL'), 16))
+			await ctx.reply(embed=embed)
 def setup(bot):
 	bot.add_cog(Fun(bot))
 
