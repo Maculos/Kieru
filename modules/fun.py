@@ -25,7 +25,7 @@ class Fun(commands.Cog):
 	async def cat(self, ctx):
 		await ctx.reply(cats[random.randint(0, len(cats)-1)])
 
-	@commands.command(name='urban', aliases=['ud'])
+	@commands.command(name='urban', aliases=['ud'], help='Searches the urbs for a term.')
 	async def urbandictionary(self, ctx, *args):
 		try:
 			term = " ".join(args[0:len(args)])
@@ -33,7 +33,7 @@ class Fun(commands.Cog):
 			querystring = {"term":term}
 			headers = {
 			'x-rapidapi-host': "mashape-community-urban-dictionary.p.rapidapi.com",
-			'x-rapidapi-key': "14bce11f2dmshea8fd5c80ee0478p1dcfe6jsnc05340f0d59d"
+			'x-rapidapi-key': str(os.getenv("URB_KEY"))
 			}
 			async with ClientSession() as session:
 				async with session.get(url, headers=headers, params=querystring) as response:
