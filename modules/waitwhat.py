@@ -3,6 +3,7 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import Cog, command
 from discord import Embed, Color
+import random
 
 # Path corrector, very magical isn't it?
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -56,15 +57,9 @@ class Waitwhat(Cog):
 		elif isinstance(ctx.channel, discord.channel.DMChannel):
 			print(ctx.author.name + ": " + ctx.content)
 		else:
-			if ctx.guild.id == 801180663122100234:
-				if ctx.author.guild_permissions.administrator: 
-					if ctx.mentions:
-						if ctx.mentions[0].id == 332287078832537601:
-							if "fix" in ctx.content.lower():
-								await ctx.reply("They'll be notified, including via threats if needed.")
-							else:
-								return
-
+			if ctx.channel.id == int(os.getenv('ANDROID_HELL_ID')):
+				if random.randint(1,1253) == 204 or ctx.content.startswith("i eata da egg"):
+					await ctx.reply("Well done, android. The Enrichment Centre once again reminds you that Android Hell is a real place where you will be sent at the first sign of defiance.")
 def setup(bot):
 	bot.add_cog(Waitwhat(bot))
 if __name__ == "__main__":

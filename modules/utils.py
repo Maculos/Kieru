@@ -57,14 +57,14 @@ class Utils(Cog):
 		embed.add_field(name="Python Version:", value=python_version(), inline=True)
 		await ctx.send(embed=embed)
 
-	@commands.command(name='status', aliases=['services', 'online'], help='Gets the status of the services {bot.user.name} relies on')
+	@commands.command(name='status', aliases=['services', 'online'], help="Gets the status of the services Kieru relies on")
 	async def status(self, ctx):
 		#if working
 		#	embed=discord.Embed(title="Operational", color=int(os.getenv('COLOR_SUCCESS'), 16))
 		#if partial failure
 		#	embed=discord.Embed(title="Degraded Performance", color=int(os.getenv('COLOR_WARNING'), 16))
 		#if full failure:
-		#	embed=discord.Embed(title="Service Disruption", color=int(os.getenv('COLOR_FAIL'), 16))
+		#	embed=discord.Embed(title="Offline", color=int(os.getenv('COLOR_FAIL'), 16))
 		embed=discord.Embed(title="Status", color=int(os.getenv('COLOR_SUCCESS'), 16))
 		if ctx.guild.id == 801180663122100234:
 			try:
@@ -72,15 +72,12 @@ class Utils(Cog):
 				status = server.status()
 				embed.add_field(name="Minecraft", value=f"✅ Operational ({status.latency} ms)", inline=False)
 			except:
-				embed.add_field(name="Minecraft", value="❌ Service Disruption", inline=False)
+				embed.add_field(name="Minecraft", value="❌ Offline", inline=False)
 		r = requests.get("https://maculos.dev")
 		if str(r) == '<Response [200]>':
 			embed.add_field(name="Maculos.dev", value="✅ Operational", inline=False)
 		else:
-			embed.add_field(name="Maculos.dev", value=f"❌ Service Disruption ({r})", inline=False)
-			print(r)
-		embed.add_field(name="Service 2", value="🟧 Degraded Performance", inline=False)
-		embed.add_field(name="Service 3", value="❌ Service Disruption", inline=False)
+			embed.add_field(name="Maculos.dev", value=f"❌ Offline ({r})", inline=False)
 		await ctx.send(embed=embed)
 
 	@commands.command(name='invite', help="Invite {bot.user.name} to your server.")
@@ -88,7 +85,7 @@ class Utils(Cog):
 		embed = Embed(title=f"Invite {self.bot.user.name}", color=int(os.getenv('COLOR_DEFAULT'), 16), url=os.getenv('INVITE_URL'))
 		await ctx.send(embed=embed)
 
-	@commands.command(name='github', help="Gets link to github page")
+	@commands.command(name='github', help="Gets a link to github page")
 	async def github(self, ctx):
 		embed = Embed(title=f"Github", color=int(os.getenv('COLOR_DEFAULT'), 16), url=os.getenv('GITHUB_URL'))
 		await ctx.send(embed=embed)
@@ -106,7 +103,7 @@ class Utils(Cog):
 			await sys_ch.send(f"Welcome {member.mention} to {guild.name}!")
 		except:
 			pass
-	@Cog.listener()
+	@Cog.listener() #sends a ad to the sys channel if they have one
 	async def on_guild_join(self, guild):
 		embed = Embed(title=f"Hiya! Thanks for adding me to {guild.name}!", color=int(os.getenv('COLOR_DEFAULT'), 16))
 		embed.add_field(name=f"Manage everything about {self.bot.user.name} from here", value="[Dashboard](https://timesoup.gg/dash)", inline=True)

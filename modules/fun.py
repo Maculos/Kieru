@@ -33,7 +33,7 @@ class Fun(commands.Cog):
 			querystring = {"term":term}
 			headers = {
 			'x-rapidapi-host': "mashape-community-urban-dictionary.p.rapidapi.com",
-			'x-rapidapi-key': str(os.getenv("URB_KEY"))
+			'x-rapidapi-key': os.getenv("URB_KEY")
 			}
 			async with ClientSession() as session:
 				async with session.get(url, headers=headers, params=querystring) as response:

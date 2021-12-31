@@ -7,10 +7,13 @@ from discord import __version__ as discord_version
 import discord
 from discord import Activity, ActivityType
 from discord.ext.commands import Bot
+import logging
+import asyncio
 
 #get dem secrets
 from dotenv import load_dotenv
 load_dotenv()
+logging.basicConfig(level=logging.WARNING)
 bot = Bot(command_prefix=os.environ.get("BOT_PREFIX"), intents=discord.Intents.all())
 # Load cogs
 for cog in os.listdir("modules"):
@@ -22,10 +25,21 @@ for cog in os.listdir("modules"):
 			print(f"Failed to load {cog[0:-3]}")
 			print(exception)
 #------------------The Anti-Headache Machine------------------#
+#a status machine that does major magic (it is 3am)
+async def status():
+	await bot.wait_until_ready()
+	statuses = [
+		discord.Game(name='Global Thermonuclear War'),
+		discord.Activity(name=f"{len(bot.guilds)} server{'s' if len(bot.guilds) > 1 else ''}! | k!", type=discord.ActivityType.watching),
+		discord.Game(name="with the fate of the universe")
+	]
+	while not bot.is_closed():
+		await bot.change_presence(activity=random.choice(statuses), status=discord.Status.idle)
+		await asyncio.sleep(15)
+bot.loop.create_task(status())
+
 @bot.event
 async def on_ready():
-	current_activity = Activity(name=f"{len(bot.guilds)} server{'s' if len(bot.guilds) > 1 else ''}! | k!", type=ActivityType.watching)
-	await bot.change_presence(activity=current_activity, status=discord.Status.idle)
 	print("(hacker noises) I'm in. (connected as " + bot.user.name + ") \n")
 
 #The classic "something went wrong and I *really* dont care to fix it" machine
